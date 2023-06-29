@@ -1,6 +1,8 @@
 <?php
 
 use Illuminate\Http\Request;
+use Inertia\Inertia;
+use Inertia\Response as InertiaResponse;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -17,3 +19,10 @@ use Illuminate\Support\Facades\Route;
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
+
+Route::post(
+    '/email',
+        function (Request $request): InertiaResponse {
+        return  Inertia::render('Main', ['email' => $request->get('email')]);
+    }
+)->name('add.new.email');
