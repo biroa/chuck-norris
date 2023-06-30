@@ -27,6 +27,6 @@ class MailingList extends Model
         'the_joke_api_status_code',
         'the_joke_api_success',
         'created_at',
-        'updated_at'
+        'updated_at',
     ];
 }

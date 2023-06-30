@@ -38,7 +38,10 @@ const Main = () => {
         },
         validate,
         onSubmit: (values) => {
-            Inertia.post(route('post.new.email'), values);
+            Inertia.post(route('post.new.email'), values,{
+                onSuccess: (message) => {console.log(message.props['email_validation'])},
+                onError: (message) => {console.error(message.props['email_validation'])},
+            });
         },
     })
 
