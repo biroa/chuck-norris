@@ -24,6 +24,8 @@ class CreateMailingListsTable extends Migration
             $table->text('the_joke')->default(null)->nullable();
             $table->smallInteger('the_joke_api_status_code')->default(null)->nullable();
             $table->boolean('the_joke_api_success')->default(null)->nullable();
+            $table->smallInteger('email_forwarding_status')->default(null)->nullable();
+            $table->dateTime('email_forwarding_date')->default(null)->nullable();
             $table->timestamps();
         });
     }

@@ -62,10 +62,11 @@ if (! function_exists('sendEmailWithAJoke')) {
         } else {
             Log::info('Failed mailgun forwarding');
         }
-        $emailStatus['email_sending_status'] = $mg->getLastResponse()->getStatusCode();
+        $emailStatus['email_forwarding_status'] = $mg->getLastResponse()->getStatusCode();
         $forwardingDate = $mg->getLastResponse()->getHeader('date');
         $emailStatus['email_forwarding_date'] = Carbon::parse(array_shift($forwardingDate))
                                                       ->format('Y-m-d H:i:s');
+
         return (object) $emailStatus;
     }
 }
