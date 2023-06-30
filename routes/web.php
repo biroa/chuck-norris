@@ -2,7 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
-
+use \App\Http\Controllers\MailingListController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -17,3 +17,5 @@ use Inertia\Inertia;
 Route::get('/', function () {
     return Inertia::render('Main');
 })->name('main.page');
+
+Route::post('/', [MailingListController::class, 'store'])->name('post.new.email');

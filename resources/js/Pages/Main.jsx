@@ -38,7 +38,7 @@ const Main = () => {
         },
         validate,
         onSubmit: (values) => {
-            Inertia.post(route('add.new.email'), values);
+            Inertia.post(route('post.new.email'), values);
         },
     })
 
