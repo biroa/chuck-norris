@@ -40,10 +40,17 @@ class MailingListController extends Controller
         $mailingList->email = $request['email'];
         $mailingList->email_domain_segment = $domainSegment;
         $mailingList->email_name_segment = $nameSegment;
+        $joke = getJoke();
+        if ($joke->we_have) {
+            $mailingList->the_joke = $joke->value;
+        }
+        $mailingList->the_joke_api_status_code = $joke->status_code;
+        $mailingList->the_joke_api_success = $joke->we_have;
+
         $mailingList->save();
 
         Inertia::share('email_validation', 'Succeeded');
 
         return Inertia::render('Main');
-    }
+}
 }

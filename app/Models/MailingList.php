@@ -10,14 +10,14 @@ use Illuminate\Database\Eloquent\Model;
  * @property string $email_domain_segment
  * @property string $email_name_segment
  * @property bool $is_sent
+ * @property string $the_joke
+ * @property int $the_joke_api_status_code
+ * @property bool $the_joke_api_success
  * @property string $created_at
  * @property string $updated_at
  */
 class MailingList extends Model
 {
-    /**
-     * @var array
-     */
     protected $fillable = [
         'email',
         'email_domain_segment',
