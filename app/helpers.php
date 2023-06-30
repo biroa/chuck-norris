@@ -1,6 +1,10 @@
 <?php
 
-    use Illuminate\Support\Facades\Http;
+use Carbon\Carbon;
+use Illuminate\Support\Facades\Http;
+    use Log;
+    use Mailgun\Mailgun;
+use Psr\Http\Client\ClientExceptionInterface as ClientExceptionInterfaceAlias;
 
 if (! function_exists('getJoke')) {
 
@@ -31,12 +35,37 @@ if (! function_exists('getJoke')) {
 
 if (! function_exists('sendEmailWithAJoke')) {
     /**
-     * @description Send a ChuckNorris Joke through the mailGunApi
+     * @description Send a ChuckNorris Joke through the mailGunApi.
+     * Return mailgun status_code and data as an object to store in the DB.
      *
+     * @param  string  $email
+     * @param  string  $joke
      * @return object
+     *
+     * @throws ClientExceptionInterfaceAlias
      */
-    function sendEmailWithAJoke(): object
+    function sendEmailWithAJoke(string $email, string $joke): object
     {
-        return (object) [];
+        $emailStatus = [];
+
+        // First, instantiate the SDK with your API credentials
+        $mg = Mailgun::create(env('API_KEY'), 'https://api.mailgun.net/v3');
+        // Compose the massage
+        $mg->messages()->send(env('MAIL_DOMAIN'), [
+            'from' => 'Excited User <mailgun@'.env('MAIL_FROM').'.mailgun.org>',
+            'to' => $email,
+            'subject' => 'Chuck Norris Joke',
+            'text' => $joke,
+        ]);
+        if ($mg->getLastResponse()->getStatusCode() === 200) {
+            Log::info('Successful mailgun forwarding');
+        } else {
+            Log::info('Failed mailgun forwarding');
+        }
+        $emailStatus['email_sending_status'] = $mg->getLastResponse()->getStatusCode();
+        $forwardingDate = $mg->getLastResponse()->getHeader('date');
+        $emailStatus['email_forwarding_date'] = Carbon::parse(array_shift($forwardingDate))
+                                                      ->format('Y-m-d H:i:s');
+        return (object) $emailStatus;
     }
 }
