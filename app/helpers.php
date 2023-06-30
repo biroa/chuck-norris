@@ -47,6 +47,7 @@ if (! function_exists('sendEmailWithAJoke')) {
     function sendEmailWithAJoke(string $email, string $joke): object
     {
         $emailStatus = [];
+        //$from = implode(['\'Excited User <mailgun@',env('MAIL_FROM'),'.mailgun.org>\'']);
 
         // First, instantiate the SDK with your API credentials
         $mg = Mailgun::create(env('API_KEY'), 'https://api.mailgun.net/v3');

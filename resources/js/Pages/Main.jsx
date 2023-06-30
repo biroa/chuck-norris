@@ -22,7 +22,18 @@ const validate = (values) => {
     return errors
 }
 
+/**
+ * @description Generate a Random Number
+ * @param max
+ * @param min
+ * @returns {number}
+ */
+const randomNumber = (max = 1, min = 5) => {
+    return  Math.floor(Math.random() * (max - min + 1) + min)
+}
+
 const Main = () => {
+
     const  [inputValue, setInputValue] =  useState('');
 
     const  handleChange = (event) => {
@@ -35,6 +46,7 @@ const Main = () => {
      */
     const formik = useFormik({
         initialValues: {
+            randomNumber: randomNumber(),
             email: '',
         },
         validate,
@@ -43,7 +55,16 @@ const Main = () => {
                 onSuccess: (message) => {
                     // Reset the form to prevent the resending
                      formik.resetForm();
-                    console.log(message.props['email_validation']);
+                    if(message.props['email_validation'] && message.props['randomNumber']){
+                        console.log(message.props['email_validation'],message.props['randomNumber']);
+                    }
+                    if(message.props['emailListSending']){
+                        if (window.confirm("Let's send all the emails")) {
+                            location.reload();
+                        }
+                    }
+
+                    formik.initialValues.randomNumber = message.props['randomNumber']
                 },
                 onError: (message) => {console.error(message.props['email_validation'])},
             });
@@ -61,12 +82,13 @@ const Main = () => {
                 <form onSubmit={formik.handleSubmit}>
                 <div className="modal-content">
                     <div className="modal-header">
-                        <h5 className="modal-title" id="exampleModalLabel">Add a new user email</h5>
+                        <h5 className="modal-title" id="exampleModalLabel">Add a new {formik.values.randomNumber} user email</h5>
                         <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div className="modal-body">
                             <div>
                                 <label htmlFor="email">Email</label>
+                                <input type="hidden" name="randomNumber" value={formik.values.randomNumber}/>
                                 <input type="email" name="email" id="email"
                                        onChange={formik.handleChange} onBlur={formik.handleBlur} value={formik.values.email}/>
                                 {formik.touched.email && formik.errors.email && (

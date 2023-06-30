@@ -22,10 +22,11 @@ class MailingListController extends Controller
      * @param  Request  $request
      * @return Response
      *
-     * @throws \Psr\Http\Client\ClientExceptionInterface
      */
     public function store(Request $request): Response
     {
+        $randomNumber = (int) $request->get('randomNumber');
+        $randomNumber = $randomNumber - 1;
         $validator = Validator::make($request->all(), [
             'email' => 'email|required|',
         ]);
@@ -45,20 +46,25 @@ class MailingListController extends Controller
         $joke = getJoke();
         if ($joke->we_have) {
             $mailingList->the_joke = $joke->value;
-            $email = sendEmailWithAJoke($request['email'], $joke->value);
-            $mailingList->email_forwarding_status = $email->email_forwarding_status;
-            if ($email->email_forwarding_status === 200) {
-                // Set the date and the is_sent flag if status code is 200
-                $mailingList->email_forwarding_date = $email->email_forwarding_date;
-                $mailingList->is_sent = true;
-            }
+//            $email = sendEmailWithAJoke($request['email'], $joke->value);
+//            $mailingList->email_forwarding_status = $email->email_forwarding_status;
+//            if ($email->email_forwarding_status === 200) {
+//                // Set the date and the is_sent flag if status code is 200
+//                $mailingList->email_forwarding_date = $email->email_forwarding_date;
+//                $mailingList->is_sent = true;
+//            }
         }
         $mailingList->the_joke_api_status_code = $joke->status_code;
         $mailingList->the_joke_api_success = $joke->we_have;
 
         $mailingList->save();
 
+        if ($randomNumber === 0) {
+            Inertia::share('emailListSending', 'we send the emails');
+        }
+
         Inertia::share('email_validation', 'Succeeded');
+        Inertia::share('randomNumber', $randomNumber);
 
         return Inertia::render('Main');
     }
