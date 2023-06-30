@@ -4,6 +4,7 @@ import route from 'ziggy-js'
 import {Inertia} from "@inertiajs/inertia";
 
 
+
 /**
  * @description Validate the email address
  * @param values
@@ -39,7 +40,11 @@ const Main = () => {
         validate,
         onSubmit: (values) => {
             Inertia.post(route('post.new.email'), values,{
-                onSuccess: (message) => {console.log(message.props['email_validation'])},
+                onSuccess: (message) => {
+                    // Reset the form to prevent the resending
+                     formik.resetForm();
+                    console.log(message.props['email_validation']);
+                },
                 onError: (message) => {console.error(message.props['email_validation'])},
             });
         },
@@ -71,7 +76,7 @@ const Main = () => {
                     </div>
                     <div className="modal-footer">
                         <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                        <button type="submit" className="btn btn-primary">Submit</button>
+                        <button type="submit" id="submit" className="btn btn-primary">Submit</button>
                     </div>
                 </div>
                 </form>
