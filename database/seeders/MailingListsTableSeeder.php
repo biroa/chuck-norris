@@ -42,5 +42,12 @@ class MailingListsTableSeeder extends Seeder
                 'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
             ],
         ]);
+
+        /**
+         *  Note:: Nullable fields in the table
+         * 'the_joke'  => null,
+         * 'the_joke_api_status_code'  => null,
+         * 'the_joke_api_success'  => null,
+         */
     }
 }
