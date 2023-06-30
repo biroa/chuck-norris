@@ -2,7 +2,7 @@
 
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Http;
-    use Log;
+    use Illuminate\Support\Facades\Log;
     use Mailgun\Mailgun;
 use Psr\Http\Client\ClientExceptionInterface as ClientExceptionInterfaceAlias;
 

@@ -21,6 +21,7 @@ class MailingListController extends Controller
      *
      * @param  Request  $request
      * @return Response
+     * @throws \Psr\Http\Client\ClientExceptionInterface
      */
     public function store(Request $request): Response
     {
@@ -43,7 +44,7 @@ class MailingListController extends Controller
         $joke = getJoke();
         if ($joke->we_have) {
             $mailingList->the_joke = $joke->value;
-            //sendEmailWithAJoke($request['email'], $joke->value);
+            sendEmailWithAJoke($request['email'], $joke->value);
         }
         $mailingList->the_joke_api_status_code = $joke->status_code;
         $mailingList->the_joke_api_success = $joke->we_have;
