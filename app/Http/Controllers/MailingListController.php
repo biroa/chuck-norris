@@ -52,5 +52,5 @@ class MailingListController extends Controller
         Inertia::share('email_validation', 'Succeeded');
 
         return Inertia::render('Main');
-}
+    }
 }

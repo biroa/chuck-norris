@@ -28,3 +28,15 @@ if (! function_exists('getJoke')) {
         return (object) $theJoke;
     }
 }
+
+if (! function_exists('sendEmailWithAJoke')) {
+    /**
+     * @description Send a ChuckNorris Joke through the mailGunApi
+     *
+     * @return object
+     */
+    function sendEmailWithAJoke(): object
+    {
+        return (object) [];
+    }
+}
