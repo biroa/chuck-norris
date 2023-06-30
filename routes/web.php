@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -13,6 +14,6 @@ use Inertia\Inertia;
 |
 */
 
-Route::get('/', function(){
+Route::get('/', function () {
     return Inertia::render('Main');
 })->name('main.page');
