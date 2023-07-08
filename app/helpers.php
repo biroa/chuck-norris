@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\MailingList;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Http;
     use Illuminate\Support\Facades\Log;
@@ -30,6 +31,21 @@ if (! function_exists('getJoke')) {
         }
 
         return (object) $theJoke;
+    }
+}
+
+if (! function_exists('getTheLastGroupOfEmailAddress')) {
+    /**
+     * @return \App\Models\MailingList[]|\Illuminate\Database\Eloquent\Builder[]|\Illuminate\Database\Eloquent\Collection|\Illuminate\Support\Collection
+     */
+    function getTheLastGroupOfEmailAddress(): \Illuminate\Database\Eloquent\Collection|array|\Illuminate\Support\Collection
+    {
+        $mailingList = new MailingList();
+        $records = $mailingList
+            ->where('is_sent',false)
+            ->where('email_forwarding_status', NULL)
+            ->get();
+        return $records->pluck('email')->toArray();
     }
 }
 
