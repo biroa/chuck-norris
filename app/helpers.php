@@ -36,15 +36,16 @@ if (! function_exists('getJoke')) {
 
 if (! function_exists('getTheLastGroupOfEmailAddress')) {
     /**
-     * @return \App\Models\MailingList[]|\Illuminate\Database\Eloquent\Builder[]|\Illuminate\Database\Eloquent\Collection|\Illuminate\Support\Collection
+     * @return array
      */
-    function getTheLastGroupOfEmailAddress(): \Illuminate\Database\Eloquent\Collection|array|\Illuminate\Support\Collection
+    function getTheLastGroupOfEmailAddress(): array
     {
         $mailingList = new MailingList();
         $records = $mailingList
-            ->where('is_sent',false)
-            ->where('email_forwarding_status', NULL)
+            ->where('is_sent', false)
+            ->where('email_forwarding_status', null)
             ->get();
+
         return $records->pluck('email')->toArray();
     }
 }

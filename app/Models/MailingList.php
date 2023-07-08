@@ -19,6 +19,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property bool $email_forwarding_date
  * @property string $created_at
  * @property string $updated_at
+ *
  * @method static \Illuminate\Database\Eloquent\Builder|MailingList newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|MailingList newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|MailingList query()

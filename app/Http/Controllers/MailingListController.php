@@ -20,8 +20,9 @@ class MailingListController extends Controller
      */
     public function index(): Response
     {
-//        $emails = getTheLastGroupOfEmailAddress();
-//        dd($emails);
+        $emails = getTheLastGroupOfEmailAddress();
+        Inertia::share('emails', $emails);
+
         return Inertia::render('Main');
     }
 
