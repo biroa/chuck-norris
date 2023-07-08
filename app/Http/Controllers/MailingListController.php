@@ -14,6 +14,16 @@ use Inertia\Response;
 class MailingListController extends Controller
 {
     /**
+     * @description Generate the main index page
+     *
+     * @return \Inertia\Response
+     */
+    public function index(): Response
+    {
+        return Inertia::render('Main');
+    }
+
+    /**
      * @description Store the email address in the MailingLists table
      *
      * Note:: This is a mock-up/prototype solution not a final approach.
@@ -22,6 +32,7 @@ class MailingListController extends Controller
      * @param  Request  $request
      * @return Response
      *
+     * @throws \Psr\Http\Client\ClientExceptionInterface
      */
     public function store(Request $request): Response
     {
@@ -46,13 +57,13 @@ class MailingListController extends Controller
         $joke = getJoke();
         if ($joke->we_have) {
             $mailingList->the_joke = $joke->value;
-//            $email = sendEmailWithAJoke($request['email'], $joke->value);
-//            $mailingList->email_forwarding_status = $email->email_forwarding_status;
-//            if ($email->email_forwarding_status === 200) {
-//                // Set the date and the is_sent flag if status code is 200
-//                $mailingList->email_forwarding_date = $email->email_forwarding_date;
-//                $mailingList->is_sent = true;
-//            }
+            $email = sendEmailWithAJoke($request['email'], $joke->value);
+            $mailingList->email_forwarding_status = $email->email_forwarding_status;
+            if ($email->email_forwarding_status === 200) {
+                // Set the date and the is_sent flag if status code is 200
+                $mailingList->email_forwarding_date = $email->email_forwarding_date;
+                $mailingList->is_sent = true;
+            }
         }
         $mailingList->the_joke_api_status_code = $joke->status_code;
         $mailingList->the_joke_api_success = $joke->we_have;
