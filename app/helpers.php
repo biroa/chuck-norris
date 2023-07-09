@@ -36,6 +36,9 @@ if (! function_exists('getJoke')) {
 
 if (! function_exists('getTheLastGroupOfEmailAddress')) {
     /**
+     * @description Collect all the new unsent email addresses.
+     * Order them by domain and name segment DESC.
+     *
      * @return array
      */
     function getTheLastGroupOfEmailAddress(): array
