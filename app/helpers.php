@@ -44,9 +44,11 @@ if (! function_exists('getTheLastGroupOfEmailAddress')) {
         $records = $mailingList
             ->where('is_sent', false)
             ->where('email_forwarding_status', null)
+            ->orderByDesc('email_domain_segment')
+            ->orderByDesc('email_name_segment')
             ->get();
 
-        return $records->pluck('email')->toArray();
+        return (array) $records->toArray();
     }
 }
 
@@ -86,5 +88,41 @@ if (! function_exists('sendEmailWithAJoke')) {
                                                       ->format('Y-m-d H:i:s');
 
         return (object) $emailStatus;
+    }
+
+    if (! function_exists('updateRecordIfJokeIsSent')) {
+        /**
+         * @description Update the record if mailgun status is successful
+         *
+         * @param  int  $id
+         * @param  string  $email
+         * @param  string  $joke
+         * @return bool
+         *
+         * @throws \Psr\Http\Client\ClientExceptionInterface
+         */
+        function updateRecordIfJokeIsSent(int $id, string $email, string $joke): bool
+        {
+            $mailingList = MailingList::where('id', $id)
+                                      ->where('is_sent', false);
+            $isSent = false;
+
+            if ($mailingList->count()) {
+                $emailSendingStatus = sendEmailWithAJoke($email, $joke);
+                if ($emailSendingStatus->email_forwarding_status === 200) {
+                    $mailingList->update(
+                        [
+                            'email_forwarding_date' => $emailSendingStatus->email_forwarding_date,
+                            'is_sent' => true,
+                        ]
+                    );
+                    $isSent = true;
+                }
+            } else {
+                Log::info('The mail is already sent out', [$id, $email]);
+            }
+
+            return $isSent;
+        }
     }
 }

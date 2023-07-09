@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Inertia\Inertia;
 use Inertia\Response;
+use Log;
+use Psr\Http\Client\ClientExceptionInterface;
 
 /**
  * MailingListController
@@ -16,12 +18,22 @@ class MailingListController extends Controller
     /**
      * @description Generate the main index page
      *
-     * @return \Inertia\Response
+     * @return Response
+     *
+     * @throws ClientExceptionInterface
      */
     public function index(): Response
     {
         $emails = getTheLastGroupOfEmailAddress();
-        Inertia::share('emails', $emails);
+        if (! empty($emails)) {
+            foreach ($emails as $email) {
+                updateRecordIfJokeIsSent($email['id'], $email['email'], $email['the_joke']);
+            }
+            Log::info('We have unsent emails in the db');
+            Inertia::share('emails', $emails);
+        } else {
+            Log::info('We have no unsent emails in the db');
+        }
 
         return Inertia::render('Main');
     }
@@ -34,8 +46,6 @@ class MailingListController extends Controller
      *
      * @param  Request  $request
      * @return Response
-     *
-     * @throws \Psr\Http\Client\ClientExceptionInterface
      */
     public function store(Request $request): Response
     {
@@ -60,13 +70,13 @@ class MailingListController extends Controller
         $joke = getJoke();
         if ($joke->we_have) {
             $mailingList->the_joke = $joke->value;
-            $email = sendEmailWithAJoke($request['email'], $joke->value);
-            $mailingList->email_forwarding_status = $email->email_forwarding_status;
-            if ($email->email_forwarding_status === 200) {
-                // Set the date and the is_sent flag if status code is 200
-                $mailingList->email_forwarding_date = $email->email_forwarding_date;
-                $mailingList->is_sent = true;
-            }
+//            $email = sendEmailWithAJoke($request['email'], $joke->value);
+//            $mailingList->email_forwarding_status = $email->email_forwarding_status;
+//            if ($email->email_forwarding_status === 200) {
+//                // Set the date and the is_sent flag if status code is 200
+//                $mailingList->email_forwarding_date = $email->email_forwarding_date;
+//                $mailingList->is_sent = true;
+//            }
         }
         $mailingList->the_joke_api_status_code = $joke->status_code;
         $mailingList->the_joke_api_success = $joke->we_have;
